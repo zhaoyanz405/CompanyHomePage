@@ -26,10 +26,13 @@ func main() {
 
 	for {
 		conn, err := listener.Accept()
+		log.Print("client has accept, addr: ", conn.RemoteAddr())
+
 		if err != nil {
 			log.Print(err)
 			continue
 		}
 		handleConn(conn)
+		log.Print("client has close, addr: ", conn.RemoteAddr())
 	}
 }
