@@ -18,7 +18,10 @@ func echo(c net.Conn, shout string, delay time.Duration) {
 }
 
 func repeat(c net.Conn) {
-	defer c.Close()
+	defer func() {
+		log.Print("client has close, addr: ", c.RemoteAddr())
+		c.Close()
+	}()
 	input := bufio.NewScanner(c)
 	for input.Scan() {
 		go echo(c, input.Text(), 1*time.Second)
@@ -41,6 +44,5 @@ func main() {
 		}
 		//go handleConn(conn)
 		go repeat(conn)
-		log.Print("client has close, addr: ", conn.RemoteAddr())
 	}
 }
