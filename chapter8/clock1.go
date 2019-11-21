@@ -18,6 +18,11 @@ func handleConn(c net.Conn) {
 	}
 }
 
+func handleWriteBack(c net.Conn) {
+	defer c.Close()
+	io.Copy(c, c)
+}
+
 func main() {
 	listener, err := net.Listen("tcp", "localhost:8000")
 	if err != nil {
@@ -32,7 +37,8 @@ func main() {
 			log.Print(err)
 			continue
 		}
-		handleConn(conn)
+		//go handleConn(conn)
+		go handleWriteBack(conn)
 		log.Print("client has close, addr: ", conn.RemoteAddr())
 	}
 }
